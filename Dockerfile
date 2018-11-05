@@ -3,13 +3,19 @@ FROM alpine:latest
 
 ENV MOTIONEYE_VERSION="0.39.2"
 
+RUN apk add --no-cache python3-dev && \
+    python3 -m ensurepip && \
+    rm -r /usr/lib/python*/ensurepip && \
+    pip3 install --upgrade pip setuptools && \
+    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
+    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
+    rm -r /root/.cache
+
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories\
 &&  apk --no-cache add\
     bash\
     gifsicle \
     motion\
-    py2-pip\
-    python\
     curl\
     openssl\
     tzdata\
@@ -20,9 +26,6 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
     libressl-dev\
     python-dev\
     zlib-dev
-
-# latest pip
-RUN pip install --upgrade pip
 
 # Install motioneye, which will automatically pull Python dependencies (tornado, jinja2, pillow and pycurl)
 RUN pip install motioneye==$MOTIONEYE_VERSION
