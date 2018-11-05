@@ -1,50 +1,27 @@
 # MotionEye
+FROM alpine:latest
 
-FROM ubuntu:18.04
-
-LABEL maintainer="malvarez00@icloud.com"
-
-ENV DEBIAN_FRONTEND noninteractive
 ENV MOTIONEYE_VERSION="0.39.2"
 
-# Install motion, ffmpeg, v4l-utils and the dependencies from the repositories
-RUN apt-get update && \
-    apt-get -y -f install \
-        wget \
-        ffmpeg \
-        v4l-utils \
-        tzdata \
-        python-pip \
-        python-dev \
-        curl \
-        libssl-dev \
-        libcurl4-openssl-dev \
-        libjpeg-dev \
-        git \
-        autoconf \
-        automake \
-        build-essential \
-        pkgconf \
-        libtool \
-        libzip-dev \
-        libjpeg-dev \
-        libavformat-dev \
-        libavcodec-dev \
-        libavutil-dev \
-        libswscale-dev \
-        libavdevice-dev \
-        libwebp-dev \
-        libmicrohttpd-dev && \
-     apt-get clean
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories\
+&&  apk --no-cache add\
+    bash\
+    motion\
+    py2-pip\
+    python\
+    curl\
+    openssl\
+    tzdata\
+&&  apk --no-cache add --virtual=buildreq\
+    build-base\
+    curl-dev\
+    jpeg-dev\
+    libressl-dev\
+    python-dev\
+    zlib-dev
 
-# Install latest motion from git
-RUN cd ~ \
-    && git clone https://github.com/Motion-Project/motion.git \
-    && cd motion \
-    && autoreconf -fiv \
-    && ./configure \
-    && make \
-    && make install
+# latest pip
+RUN pip install --upgrade pip
 
 # Install motioneye, which will automatically pull Python dependencies (tornado, jinja2, pillow and pycurl)
 RUN pip install motioneye==$MOTIONEYE_VERSION
