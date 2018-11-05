@@ -33,7 +33,8 @@ RUN apt-get update && \
         libavutil-dev \
         libswscale-dev \
         libavdevice-dev \
-        libwebp-dev &&\
+        libwebp-dev \
+        libmicrohttpd-dev && \
      apt-get clean
 
 # Install latest motion from git
