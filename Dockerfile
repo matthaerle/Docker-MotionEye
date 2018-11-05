@@ -6,6 +6,7 @@ ENV MOTIONEYE_VERSION="0.39.2"
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories\
 &&  apk --no-cache add\
     bash\
+    gifsicle \
     motion\
     py2-pip\
     python\
