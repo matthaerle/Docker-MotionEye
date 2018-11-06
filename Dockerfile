@@ -6,20 +6,41 @@ ENV MOTIONEYE_VERSION="0.39.2"
 # Install motion, ffmpeg, v4l-utils and the dependencies from the repositories
 RUN apt-get update && \
     apt-get -y -f install \
+        wget \
         ffmpeg \
         v4l-utils \
-        gdebi-core \
-        wget \
+        tzdata \
         python-pip \
         python-dev \
         curl \
         libssl-dev \
         libcurl4-openssl-dev \
-        libjpeg-dev
+        libjpeg-dev \
+        git \
+        autoconf \
+        automake \
+        build-essential \
+        pkgconf \
+        libtool \
+        libzip-dev \
+        libjpeg-dev \
+        libavformat-dev \
+        libavcodec-dev \
+        libavutil-dev \
+        libswscale-dev \
+        libavdevice-dev \
+        libwebp-dev \
+        libmicrohttpd-dev && \
+     apt-get clean
 
-RUN cd /tmp \
-    && wget https://github.com/Motion-Project/motion/releases/download/release-4.2/bionic_motion_4.2-1_amd64.deb \
-    && gdebi bionic_motion_4.2-1_amd64.deb
+# Install latest motion from git
+RUN cd ~ \
+    && git clone https://github.com/Motion-Project/motion.git \
+    && cd motion \
+    && autoreconf -fiv \
+    && ./configure \
+    && make \
+    && make install
 
 # Install motioneye, which will automatically pull Python dependencies (tornado, jinja2, pillow and pycurl)
 RUN pip install motioneye==$MOTIONEYE_VERSION
@@ -30,9 +51,6 @@ RUN mkdir -p /etc/motioneye \
 
 # Configurations, Video & Images
 VOLUME ["/etc/motioneye", "/var/lib/motioneye"]
-
-# clean up
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Start the MotionEye Server
 CMD test -e /etc/motioneye/motioneye.conf || \
