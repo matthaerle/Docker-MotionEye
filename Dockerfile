@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV MOTIONEYE_VERSION="0.39.2"
+ENV MOTIONEYE_VERSION="0.40"
 
 # Install motion, ffmpeg, v4l-utils and the dependencies from the repositories
 RUN apt-get update && \
@@ -51,6 +51,9 @@ RUN mkdir -p /etc/motioneye \
 
 # Configurations, Video & Images
 VOLUME ["/etc/motioneye", "/var/lib/motioneye"]
+
+# Run migration helper to convert config from motion 3.x to 4.x
+RUN for file in /etc/motioneye/{motion,thread-*}.conf; do /usr/local/lib/python2.7/dist-packages/motioneye/scripts/migrateconf.sh $file; done
 
 # Start the MotionEye Server
 CMD test -e /etc/motioneye/motioneye.conf || \
