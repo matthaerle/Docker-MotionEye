@@ -54,7 +54,7 @@ VOLUME ["/etc/motioneye", "/var/lib/motioneye"]
 
 
 # Run migration helper to convert config from motion 3.x to 4.x, set default conf and start the MotionEye Server
-CMD for file in /etc/motioneye/{motion,thread-*}.conf; do /usr/local/lib/python2.7/dist-packages/motioneye/scripts/migrateconf.sh $file; done; \
+CMD for file in `find /etc/motioneye -type f \( -name "motion.conf" -o -name "thread-*.conf" \)`; do /usr/local/lib/python2.7/dist-packages/motioneye/scripts/migrateconf.sh $file; done; \
     test -e /etc/motioneye/motioneye.conf || \
     cp /usr/local/share/motioneye/extra/motioneye.conf.sample /etc/motioneye/motioneye.conf; \
     /usr/local/bin/meyectl startserver -c /etc/motioneye/motioneye.conf
