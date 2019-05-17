@@ -50,7 +50,7 @@ RUN pip install motioneye==$MOTIONEYE_VERSION
 RUN mkdir -p /etc/motioneye \
     mkdir -p /var/lib/motioneye
 RUN apt-get update
-RUN	apt-get upgrade
+RUN	apt-get upgrade -y -f
 
 # Configurations, Video & Images
 VOLUME ["/etc/motioneye", "/var/lib/motioneye"]
