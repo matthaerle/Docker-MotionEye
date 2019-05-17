@@ -31,7 +31,8 @@ RUN apt-get update && \
         libavdevice-dev \
         libwebp-dev \
         libmicrohttpd-dev && \
-     apt-get clean
+     apt-get clean && \
+	 pip install pytz
 
 # Install latest motion from git
 RUN cd ~ \
